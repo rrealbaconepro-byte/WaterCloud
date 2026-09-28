@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WaterCloud</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#0b1220;color:#fff;height:100vh;overflow:hidden}
+.app{display:flex;height:100vh}
+.sidebar{width:220px;background:#111827;padding:20px}
+.logo{font-size:24px;font-weight:bold;color:#67e8f9;margin-bottom:30px}
+.sidebar button{
+width:100%;padding:14px;margin-bottom:10px;border:none;
+background:#1f2937;color:white;border-radius:12px;cursor:pointer
+}
+.sidebar button:hover,.active{background:#0ea5e9}
+.content{flex:1;overflow:auto;background:#0f172a}
+.page{display:none;padding:25px}
+.show{display:block}
+.card{
+background:#172033;border-radius:16px;padding:18px;
+margin-top:18px;border:1px solid #22304a
+}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px}
+.connect{
+background:#1e293b;padding:20px;border-radius:14px;
+cursor:pointer;border:1px solid #334155
+}
+.connect:hover{border-color:#38bdf8}
+input,textarea{
+width:100%;padding:12px;background:#111827;color:white;
+border:1px solid #334155;border-radius:10px
+}
+textarea{height:220px;resize:vertical}
+.btn{
+background:#0ea5e9;color:white;border:none;
+padding:12px 18px;border-radius:10px;cursor:pointer
+}
+.mail{display:flex;height:70vh}
+.list{width:280px;border-right:1px solid #263244;overflow:auto}
+.item{padding:15px;border-bottom:1px solid #1f2937;cursor:pointer}
+.item:hover{background:#1b2637}
+.reader{flex:1;padding:20px}
+.progress{height:18px;background:#1f2937;border-radius:20px;overflow:hidden;margin:12px 0}
+.bar{height:100%;background:#38bdf8;width:0%}
+.tabs{display:flex;gap:8px;margin-bottom:10px}
+.tab{padding:8px 14px;background:#1f2937;border-radius:8px;cursor:pointer}
+.tab.active{background:#0ea5e9}
+.editor{display:grid;grid-template-columns:1fr 1fr;height:65vh}
+iframe{width:100%;height:100%;border:none;background:white}
+.good{color:#86efac}
+.warn{color:#fca5a5;font-weight:bold}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<div class="sidebar">
+<div class="logo">💧 WaterCloud</div>
+
+<button class="active" onclick="openPage('home',this)">Home</button>
+<button onclick="openPage('mail',this)">Mail</button>
+<button onclick="openPage('cloud',this)">Cloud</button>
+<button onclick="openPage('notes',this)">Notes</button>
+<button onclick="openPage('code',this)">Code Studio</button>
+<button onclick="openPage('settings',this)">Settings</button>
+</div>
+
+<div class="content">
+
+<!-- HOME -->
+<div id="home" class="page show">
+<h1>Welcome to WaterCloud</h1>
+<p>Mail • Cloud • Notes • Code in one workspace.</p>
+
+<div class="card">
+<h2>Connect Accounts</h2><br>
+
+<div class="grid">
+<div class="connect" onclick="connect('Gmail')">📨 Gmail</div>
+<div class="connect" onclick="connect('Apple Mail')"> Apple Mail</div>
+<div class="connect" onclick="connect('Outlook')">📩 Outlook</div>
+<div class="connect" onclick="connect('IMAP')">🌐 IMAP</div>
+</div>
+
+<br>
+<p id="status"></p>
+
+</div>
+</div>
+
+<!-- MAIL -->
+<div id="mail" class="page">
+<h1>Inbox</h1>
+<br>
+<button class="btn" onclick="compose()">Compose</button>
+
+<div class="card mail">
+<div id="mailList" class="list"></div>
+<div id="reader" class="reader">
+Select an email
+</div>
+</div>
+</div>
+
+<!-- CLOUD -->
+<div id="cloud" class="page">
+<h1>WaterCloud Drive</h1>
+<p>Maximum storage: <b>2 TB (2048 GB)</b></p>
+
+<div class="card">
+<h2>Storage</h2>
+
+<div class="progress">
+<div id="bar" class="bar"></div>
+</div>
+
+<h3 id="storageText"></h3>
+<p id="sync" class="good"></p>
+
+<br>
+
+<button class="btn" onclick="upload(100)">Upload 100GB</button>
+<button class="btn" onclick="upload(300)">Upload 300GB</button>
+<button class="btn" onclick="clearStorage()">Clear</button>
+
+</div>
+</div>
+
+<!-- NOTES -->
+<div id="notes" class="page">
+<h1>Notes</h1>
+<div class="card">
+
+<input id="title" placeholder="Title"><br><br>
+
+<textarea id="note" placeholder="Write here..."></textarea><br><br>
+
+<button class="btn" onclick="saveNote()">Save Note</button>
+
+<p id="saved"></p>
+
+</div>
+</div>
+
+<!-- CODE -->
+<div id="code" class="page">
+<h1>Code Studio</h1>
+
+<div class="card">
+
+<div class="tabs">
+<div class="tab active" onclick="tab('html',this)">HTML</div>
+<div class="tab" onclick="tab('css',this)">CSS</div>
+<div class="tab" onclick="tab('js',this)">JS</div>
+</div>
+
+<button class="btn" onclick="run()">Run</button><br><br>
+
+<div class="editor">
+<textarea id="editor"></textarea>
+<iframe id="preview"></iframe>
+</div>
+
+</div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settings" class="page">
+<h1>Settings</h1>
+
+<div class="card">
+<h3>Account</h3>
+<p>User: Demo</p>
+<p>Plan: WaterCloud 2TB</p>
+</div>
+
+<div class="card">
+<h3>Connected</h3>
+<p>Gmail</p>
+<p>Apple Mail</p>
+<p>Outlook</p>
+</div>
+
+</div>
+
+</div>
+</div>
+
+<script>
+/* Navigation */
+function openPage(id,btn){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("show"));
+document.getElementById(id).classList.add("show");
+
+document.querySelectorAll(".sidebar button").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+}
+
+/* Connect */
+function connect(name){
+status.innerHTML="✅ Connected to "+name+" (Demo)";
+}
+
+/* Mail */
+let emails=[
+{from:"Alex",subject:"Landing Page",body:"Review the HTML project."},
+{from:"Emma",subject:"Design Update",body:"Figma has been uploaded."},
+{from:"GitHub",subject:"Pull Request",body:"WaterCloud PR merged."}
+];
+
+function renderMail(){
+mailList.innerHTML="";
+
+emails.forEach(e=>{
+let div=document.createElement("div");
+div.className="item";
+div.innerHTML="<b>"+e.from+"</b><br>"+e.subject;
+
+div.onclick=()=>{
+reader.innerHTML="<h2>"+e.subject+"</h2><br><p><b>From:</b> "+e.from+"</p><br>"+e.body;
+};
+
+mailList.appendChild(div);
+});
+}
+
+renderMail();
+
+function compose(){
+let to=prompt("To:");
+if(!to)return;
+
+let subject=prompt("Subject:");
+let body=prompt("Message:");
+
+emails.unshift({
+from:"You → "+to,
+subject:subject||"No Subject",
+body:body||""
+});
+
+renderMail();
+
+alert("Email sent (Demo)");
+}
+
+/* Storage */
+const MAX=2048;
+let used=1320;
+
+function updateStorage(){
+let pct=(used/MAX)*100;
+bar.style.width=pct+"%";
+storageText.innerHTML=used+" GB / 2048 GB";
+
+if(pct>=95){
+sync.innerHTML="⚠ Storage almost full — Sync Paused";
+sync.className="warn";
+}else{
+sync.innerHTML="✔ Sync Active";
+sync.className="good";
+}
+}
+
+updateStorage();
+
+function upload(size){
+if((used/MAX)*100>=95){
+alert("Sync paused. Free storage first.");
+return;
+}
+used=Math.min(MAX,used+size);
+updateStorage();
+}
+
+function clearStorage(){
+used=120;
+updateStorage();
+}
+
+/* Notes */
+let savedData=JSON.parse(localStorage.getItem("watercloud_note")||"{}");
+
+if(savedData.title){
+title.value=savedData.title;
+note.value=savedData.body;
+}
+
+function saveNote(){
+localStorage.setItem("watercloud_note",JSON.stringify({
+title:title.value,
+body:note.value
+}));
+saved.innerHTML="✅ Saved";
+}
+
+/* Code Studio */
+let current="html";
+
+let code={
+html:`<h1>💧 WaterCloud</h1>
+<button onclick="hello()">Click</button>`,
+css:`body{
+font-family:Arial;
+padding:30px;
+}
+h1{color:#0ea5e9;}`,
+js:`function hello(){
+alert("Hello from WaterCloud");
+}`
+};
+
+editor.value=code.html;
+
+function tab(name,el){
+code[current]=editor.value;
+current=name;
+editor.value=code[name];
+
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+el.classList.add("active");
+}
+
+function run(){
+code[current]=editor.value;
+
+let doc=preview.contentDocument;
+doc.open();
+doc.write(
+"<style>"+code.css+"</style>"+
+code.html+
+"<script>"+code.js+"<\/script>"
+);
+doc.close();
+}
+
+run();
+</script>
+
+</body>
+</html>
