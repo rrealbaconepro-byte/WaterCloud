@@ -2,21 +2,10 @@
   "name": "watercloud",
   "version": "1.0.0",
   "private": true,
-  "description": "WaterCloud - Mail, Cloud, Notes & Code Studio",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@codemirror/lang-css": "^6.3.1",
-    "@codemirror/lang-html": "^6.4.9",
-    "@codemirror/lang-javascript": "^6.2.4",
-    "@codemirror/state": "^6.5.2",
-    "@codemirror/view": "^6.38.6",
-    "idb": "^8.0.3",
-    "pyodide": "^0.28.3"
+    "start": "vite preview --host 0.0.0.0 --port $PORT"
   },
   "devDependencies": {
     "vite": "^7.1.3"
